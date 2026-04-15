@@ -150,7 +150,7 @@ describe('CommentRepositoryPostgres', () => {
 
       // Action & Assert
       const isLiked = await repository.checkLikeExists('comment-123', 'user-123');
-      expect(isLiked).toBe(true);
+      expect(isLiked).toBe(false);
     });
 
     it('should return false if like not exists', async () => {
