@@ -37,30 +37,23 @@ jobs:
         run: npm install
 
       - name: Run Migrations
-        run: npm run migrate up
+        # Menggunakan npx agar pasti memanggil binary node-pg-migrate yang benar
+        run: npx node-pg-migrate up
         env:
           NODE_ENV: test
-          # Database URL untuk node-pg-migrate
           DATABASE_URL: postgres://postgres:password_test@localhost:5432/forumapi_test
-          PGHOST: localhost
-          PGUSER: postgres
-          PGPASSWORD: password_test
-          PGDATABASE: forumapi_test
-          PGPORT: 5432
 
       - name: Run Tests
-        run: npm test
+        # Menambahkan sleep 5s untuk memastikan DB benar-benar siap setelah migrasi massal
+        run: sleep 5 && npm test
         env:
           NODE_ENV: test
-          # Environment untuk aplikasi (sesuai .env lokal kamu)
           PGHOST_TEST: localhost
           PGUSER_TEST: postgres
           PGPASSWORD_TEST: password_test
           PGDATABASE_TEST: forumapi_test
           PGPORT_TEST: 5432
-          # Backup jika aplikasi menggunakan DATABASE_URL
           DATABASE_URL: postgres://postgres:password_test@localhost:5432/forumapi_test
-          # Mengambil nilai dari GitHub Secrets yang sudah kamu isi
           ACCESS_TOKEN_KEY: ${{ secrets.ACCESS_TOKEN_KEY }}
           REFRESH_TOKEN_KEY: ${{ secrets.REFRESH_TOKEN_KEY }}
           ACCCESS_TOKEN_AGE: 5000
