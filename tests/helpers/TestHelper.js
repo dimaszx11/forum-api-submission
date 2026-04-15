@@ -5,10 +5,16 @@ const ThreadsTableTestHelper = require('./ThreadsTableTestHelper');
 const CommentsTableTestHelper = require('./CommentsTableTestHelper');
 
 const cleanupDatabase = async () => {
-  // PENTING: Hapus tabel yang memiliki foreign key paling akhir (comment_likes) terlebih dahulu
+  // 1. Hapus 'comment_likes' karena dia merujuk ke Comments & Users
   await pool.query('DELETE FROM comment_likes WHERE 1=1'); 
+  
+  // 2. Hapus 'comments' karena dia merujuk ke Threads & Users
   await CommentsTableTestHelper.cleanTable();
+  
+  // 3. Hapus 'threads' karena dia merujuk ke Users
   await ThreadsTableTestHelper.cleanTable();
+  
+  // 4. Baru hapus tabel utama (Users & Authentications)
   await AuthenticationsTableTestHelper.cleanTable();
   await UsersTableTestHelper.cleanTable();
 };
